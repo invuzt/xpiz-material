@@ -11,21 +11,31 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Patch Cargo.toml (Fix Workspace Error)
-        run: |
-          # Perintah sakti untuk menghapus semua '.workspace = true' 
-          # dan menggantinya dengan nilai standar agar bisa build sendiri
-          sed -i 's/workspace = true/version = "1.9.0"/g' Cargo.toml
-          # Menghapus referensi ke workspace induk
-          sed -i '/\[workspace\]/d' Cargo.toml
-
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
         with:
           target: aarch64-linux-android
 
+      # --- BAGIAN CACHE MULAI ---
+      - name: Cache Rust & xbuild
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-xbuild-${{ hashFiles('**/Cargo.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-xbuild-
+      # --- BAGIAN CACHE SELESAI ---
+
       - name: Install xbuild
-        run: cargo install --git https://github.com/burhankhanzada/xbuild --rev 5eb203e9e0718bd992632b803d59bed80ae0bdc0 xbuild
+        run: |
+          if ! command -v x &> /dev/null; then
+            cargo install --git https://github.com/burhankhanzada/xbuild --rev 5eb203e9e0718bd992632b803d59bed80ae0bdc0 xbuild
+          fi
 
       - name: Build APK
         run: |

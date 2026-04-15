@@ -1,6 +1,5 @@
-// Copyright © SixtyFPS GmbH <info@slint.dev>
-// SPDX-License-Identifier: MIT
-
 fn main() {
-    slint_build::compile("ui/main.slint").expect("Slint build failed");
+    let config = slint_build::CompilerConfiguration::new()
+        .with_include_paths(vec![std::path::PathBuf::from("src")]);
+    slint_build::compile_with_config("ui/main.slint", config).unwrap();
 }
