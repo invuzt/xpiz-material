@@ -1,0 +1,31 @@
+name: Build XPIZ Material APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          target: aarch64-linux-android
+
+      - name: Install xbuild
+        run: cargo install --git https://github.com/burhankhanzada/xbuild --rev 5eb203e9e0718bd992632b803d59bed80ae0bdc0 xbuild
+
+      - name: Build APK
+        run: |
+          # Kita pakai xbuild untuk handle semuanya secara otomatis
+          x build --platform android --arch arm64 --release --format 'apk'
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: xpiz-material-apk
+          path: target/x/release/android/*.apk
