@@ -11,6 +11,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Patch Cargo.toml (Fix Workspace Error)
+        run: |
+          # Perintah sakti untuk menghapus semua '.workspace = true' 
+          # dan menggantinya dengan nilai standar agar bisa build sendiri
+          sed -i 's/workspace = true/version = "1.9.0"/g' Cargo.toml
+          # Menghapus referensi ke workspace induk
+          sed -i '/\[workspace\]/d' Cargo.toml
+
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
         with:
@@ -21,7 +29,6 @@ jobs:
 
       - name: Build APK
         run: |
-          # Kita pakai xbuild untuk handle semuanya secara otomatis
           x build --platform android --arch arm64 --release --format 'apk'
 
       - name: Upload APK

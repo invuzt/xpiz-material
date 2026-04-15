@@ -1,13 +1,11 @@
-# Copyright © SixtyFPS GmbH <info@slint.dev>
-# SPDX-License-Identifier: MIT
-
+# Modified version of Slint Material Gallery
 [package]
-name = "material-gallery"
-version.workspace = true
-authors.workspace = true
-edition.workspace = true
+name = "xpiz-material"
+version = "0.1.0"
+authors = ["YourName"]
+edition = "2021"
 publish = false
-license.workspace = true
+license = "MIT"
 
 [lib]
 crate-type = ["lib", "cdylib"]
@@ -16,13 +14,13 @@ name = "material_gallery"
 
 [[bin]]
 path = "src/main.rs"
-name = "material-gallery"
+name = "xpiz-material"
 
 [dependencies]
-slint = { path = "../../../../api/rs/slint", features = ["backend-android-activity-06"] }
-# chrono is used to display data on the DatePicker
+# Kita ambil slint versi terbaru dari internet
+slint = { version = "1.9.0", features = ["renderer-skia", "backend-android-activity-06"] }
 chrono = { version = "0.4", default-features = false, features = ["std", "alloc"] }
-serde = { version = "1.0.163", default-features = false, features = ["derive"] }
+serde = { version = "1.0", default-features = false, features = ["derive"] }
 serde_json = { version = "1.0" }
 css-color-parser2 = "1.0.1"
 
@@ -30,18 +28,12 @@ css-color-parser2 = "1.0.1"
 wasm-bindgen = { version = "0.2" }
 console_error_panic_hook = "0.1.5"
 
-[target.'cfg(not(target_family = "wasm"))'.dependencies]
-slint = { path = "../../../../api/rs/slint", features = ["renderer-skia"] }
-
 [build-dependencies]
-slint-build = { path = "../../../../api/rs/build" }
+slint-build = { version = "1.9.0" }
 
 [package.metadata.android]
-package = "com.slint.material"
-apk_name = "slint_material"
+package = "com.invuzt.xpizmaterial"
+apk_name = "xpiz_material"
 
 [package.metadata.android.application]
-label = "Slint Material"
-
-[package.metadata.packager]
-before-packaging-command = "cargo build --release"
+label = "XPIZ Material"
